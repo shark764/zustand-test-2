@@ -1,13 +1,36 @@
+import { useState } from 'react';
+
 import logo from './logo.svg';
+import { useUserStore } from './store/useUserStore';
+
 import './App.css';
 
-function App() {
+const App = () => {
+  const { user, changeUsersAge, changeUsersName } = useUserStore();
+  const [userState, setUserState] = useState({
+    name: user.name,
+    age: user.age,
+  });
+
+  const onChange = (event) => {
+    setUserState((currentState) => ({
+      ...currentState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    changeUsersAge(userState.age);
+    changeUsersName(userState.name);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Edit <code>src/App.tsx</code> and save to reload.
         </p>
         <a
           className="App-link"
@@ -18,8 +41,27 @@ function App() {
           Learn React
         </a>
       </header>
+      <main>
+        <form onSubmit={onSubmit}>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            onChange={onChange}
+            placeholder="name"
+          />
+          <input
+            type="text"
+            name="age"
+            id="age"
+            onChange={onChange}
+            placeholder="age"
+          />
+          <input type="submit" value="Change user details" />
+        </form>
+      </main>
     </div>
   );
-}
+};
 
 export default App;
